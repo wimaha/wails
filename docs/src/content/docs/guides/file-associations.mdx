@@ -55,14 +55,46 @@ fileAssociations:
 
 ### Configuration Properties
 
-| Property    | Description                                                      | Platform |
-|-------------|------------------------------------------------------------------|----------|
-| ext         | File extension without the leading period (e.g., `txt`)          | All      |
-| name        | Display name for the file type                                   | All      |
-| description | Description shown in file properties                             | Windows  |
-| iconName    | Name of the icon file (without extension) in the build folder    | All      |
-| role        | Application's role for this file type (e.g., `Editor`, `Viewer`) | macOS    |
-| mimeType    | MIME type for the file (e.g., `image/jpeg`)                      | macOS    |
+| Property    | Description                                                        | Platform |
+|-------------|--------------------------------------------------------------------|----------|
+| ext         | File extension without the leading period (e.g., `txt`)            | All      |
+| name        | Display name for the file type                                     | All      |
+| description | Description shown in file properties                               | Windows  |
+| iconName    | Name of the icon file (without extension) in the build folder      | All      |
+| role        | Application's role for this file type (e.g., `Editor`, `Viewer`)   | macOS    |
+| rank        | Launch Services rank; see [Rank](#rank-macos) below.               | macOS    |
+| conformsTo  | Parent UTI; see [conformsTo](#conformsto-macos) below.             | macOS    |
+| utTypeIcons | Modern document icon; see [utTypeIcons](#uttypeicons-macos) below. | macOS    |
+| mimeType    | MIME type for the file (e.g., `image/jpeg`)                        | macOS    |
+
+#### Rank (macOS)
+
+The **rank** property (LSHandlerRank) determines how Launch Services ranks your app among apps that declare themselves editors or viewers of this file type:
+
+- **Owner** — This app is the primary creator of files of this type.
+- **Default** — This app is an opener of files of this type (also used when no rank is specified).
+- **Alternate** — This app is a secondary viewer of files of this type.
+- **None** — This app is never selected to open files of this type, but it still accepts drops of files of this type.
+
+Launch Services uses this value to choose which app opens the file. Precedence order: Owner → Default → Alternate. Available in macOS 10.5+.
+
+Wails3 generates **exported** type declarations (UTExportedTypeDeclarations) when rank is Owner, and **imported** type declarations (UTImportedTypeDeclarations) for Default, Alternate, or None.
+
+#### conformsTo (macOS)
+
+The **conformsTo** property specifies the Uniform Type Identifier (UTI) that your custom file type conforms to. This tells the system which standard type your format is based on (e.g. plain text, image, or data). Common values include `public.plain-text`, `public.image`, `public.data`, and `public.composite-content`. It maps to `UTTypeConformsTo` in the app’s Info.plist and is used in both exported and imported type declarations.
+
+#### utTypeIcons (macOS)
+
+The **utTypeIcons** property defines the document type icon used on **macOS 11 and later**. It has three optional sub-keys (icon names in the build folder, without extension):
+
+| Property       | Description     | Info.plist key            |
+|----------------|-----------------|---------------------------|
+| backgroundName | Background/fill | UTTypeIconBackgroundName  |
+| badgeName      | Overlay image   | UTTypeIconBadgeName       |
+| text           | Text label      | UTTypeIconText            |
+
+When **utTypeIcons** is set, macOS 11+ uses this modern icon only; **iconName** is **not** used on those systems. The **iconName** icon is still written to the bundle and is used only as a fallback on older macOS versions (pre–11). If you omit **utTypeIcons**, **iconName** is used for the document type on all supported macOS versions.
 
 ## Listening for File Open Events
 
