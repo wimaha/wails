@@ -64,7 +64,7 @@ fileAssociations:
 | role        | Application's role for this file type (e.g., `Editor`, `Viewer`)   | macOS    |
 | rank        | Launch Services rank; see [Rank](#rank-macos) below.               | macOS    |
 | conformsTo  | Parent UTI; see [conformsTo](#conformsto-macos) below.             | macOS    |
-| utTypeIcons | Modern document icon; see [utTypeIcons](#uttypeicons-macos) below. | macOS    |
+| utTypeIcons | Modern document icon; see [utTypeIcons](#uttypeicons-macos) below. | macOS 11+|
 | mimeType    | MIME type for the file (e.g., `image/jpeg`)                        | macOS    |
 
 #### Rank (macOS)
@@ -82,7 +82,7 @@ Wails3 generates **exported** type declarations (UTExportedTypeDeclarations) whe
 
 #### conformsTo (macOS)
 
-The **conformsTo** property specifies the Uniform Type Identifier (UTI) that your custom file type conforms to. This tells the system which standard type your format is based on (e.g. plain text, image, or data). Common values include `public.plain-text`, `public.image`, `public.data`, and `public.composite-content`. It maps to `UTTypeConformsTo` in the app’s Info.plist and is used in both exported and imported type declarations.
+The **conformsTo** property specifies the Uniform Type Identifier (UTI) that your custom file type conforms to. This tells the system which standard type your format is based on (e.g. plain text, image, or data). Common values include `public.plain-text`, `public.image`, `public.data`, and `public.composite-content`. (See [Apple Documentation](https://developer.apple.com/documentation/uniformtypeidentifiers/uttype-swift.struct) for more details.) It maps to `UTTypeConformsTo` in the app’s Info.plist and is used in both exported and imported type declarations.
 
 #### utTypeIcons (macOS)
 
@@ -94,7 +94,7 @@ The **utTypeIcons** property defines the document type icon used on **macOS 11 a
 | badgeName      | Overlay image   | UTTypeIconBadgeName       |
 | text           | Text label      | UTTypeIconText            |
 
-When **utTypeIcons** is set, macOS 11+ uses this modern icon only; **iconName** is **not** used on those systems. The **iconName** icon is still written to the bundle and is used only as a fallback on older macOS versions (pre–11). If you omit **utTypeIcons**, **iconName** is used for the document type on all supported macOS versions.
+When **utTypeIcons** is set, macOS 11+ uses this modern icon only; **iconName** is **not** used on those systems. (See [Apple Documentation](https://developer.apple.com/design/human-interface-guidelines/icons#Platform-considerations) for more details.) The **iconName** icon is still written to the bundle and is used only as a fallback on older macOS versions (pre–11). If you omit **utTypeIcons**, **iconName** is used for the document type on all supported macOS versions.
 
 ## Listening for File Open Events
 
